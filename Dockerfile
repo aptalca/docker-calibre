@@ -8,15 +8,17 @@ RUN apt-get update && \
 DEBIAN_FRONTEND=noninteractive apt-get install -y \
 wget \
 python \
-xdg-utils
+xdg-utils && \
 
-RUN mkdir /opt/calibre && mkdir /opt/calibre/library
+mkdir /opt/calibre && \
+mkdir /opt/calibre/library
 
 VOLUME ["/opt/calibre"]
 
 EXPOSE 8080
 
-ADD calibreinstall.sh /root/calibre/calibreinstall.sh
-RUN chmod +x /root/calibre/calibreinstall.sh && /root/calibre/calibreinstall.sh
+RUN cd /opt && \
+wget --no-check-certificate -nv -O- https://raw.githubusercontent.com/kovidgoyal/calibre/master/setup/linux-installer.py | python -c "import sys; main=lambda:sys.stderr.write('Download failed\n'); exec(sys.stdin.read()); main('/opt/', True)"
+
 
 ENTRYPOINT ["/usr/bin/calibre-server", "--with-library=/opt/calibre/library"]
