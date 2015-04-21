@@ -10,16 +10,14 @@ wget \
 python \
 xdg-utils \
 ImageMagick && \
+mkdir /opt/calibre
 
-mkdir /opt/calibre && \
-mkdir /opt/calibrelibrary
-
-VOLUME ["/opt/calibrelibrary"]
+VOLUME ["/config"]
 
 EXPOSE 8080
 
 RUN cd /opt && \
 wget --no-check-certificate -nv -O- https://raw.githubusercontent.com/kovidgoyal/calibre/master/setup/linux-installer.py | python -c "import sys; main=lambda:sys.stderr.write('Download failed\n'); exec(sys.stdin.read()); main('/opt/', True)"
 
-CMD ["/opt/calibre/calibre-server","--with-library=/opt/calibrelibrary"]
+CMD ["/opt/calibre/calibre-server","--with-library=/config"]
 
